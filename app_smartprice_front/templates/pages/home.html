@@ -1,0 +1,19 @@
+{% extends "pages/base.html" %}
+
+{% block content %}
+
+<form action="{% url "app_smartprice_front:home" %}" method="post">
+    {% csrf_token %}
+    {% for field in cadastro_usuario %}
+        {{field.label}}
+        {{field}}
+    {% endfor %}
+    <button type="submit">Enviar</button>
+</form>
+
+{% endblock content %}
+
+
+
+
+
