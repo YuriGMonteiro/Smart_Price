@@ -1,7 +1,7 @@
 {% extends "pages/base.html" %}
 
-{% block content %}
-
+pyt{% block content %}
+{% comment %} 
 <form action="{% url "app_smartprice_front:home" %}" method="post">
     {% csrf_token %}
     {% for field in cadastro_usuario %}
@@ -9,7 +9,32 @@
         {{field}}
     {% endfor %}
     <button type="submit">Enviar</button>
-</form>
+</form> {% endcomment %}
+
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Codigo</th>
+        <th scope="col">Descricao</th>
+        <th scope="col">Situacao</th>
+        <th scope="col">Preco</th>
+        <th scope="col">PrecoCusto</th>
+        <th scope="col">EstoqueAtual</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for dados in produtos %}
+            <tr>
+                <td>{{dados.Codigo}}</td>
+                <td>{{dados.Descricao}}</td>
+                <td>{{dados.Situacao}}</td>
+                <td>{{dados.Preco}}</td>
+                <td>{{dados.PrecoCusto}}</td>
+                <td>{{dados.EstoqueAtual}}</td>
+            </tr>
+        {% endfor %}    
+    </tbody>
+  </table>
 
 {% endblock content %}
 
