@@ -10,12 +10,22 @@ import requests
 # import Quantidade_Vendida
 # import DadosBling
 
-warnings.simplefilter(
-    action='ignore', category=pd.errors.SettingWithCopyWarning)
 
 
-BLING_SECRET_KEY = "07bd3fa38742e5b5edb6b795d30858d4260742412046e74d44b0b2fc227daacf3e75261a"
+# BLING_SECRET_KEY = "07bd3fa38742e5b5edb6b795d30858d4260742412046e74d44b0b2fc227daacf3e75261a"
 
+
+def user_register(request):
+    context = {}
+    context['cadastro_usuario'] = RegisterForm
+    
+    if request.method == "POST":
+        registro_usuario = RegisterForm(request.POST)
+        if registro_usuario.is_valid():
+            user = registro_usuario.save(commit=False)
+            user.username = user.email
+            user.save()
+    return render(request, "pages/register.html", context=context)
 
 def list_all_products(BLING_SECRET_KEY):
     page = 1
@@ -64,13 +74,6 @@ def home(request):
 
     context = {}
     context['produtos'] =  dados_produtos
-    # cadastro = RegisterForm()
-    # context = {}
-    # context['cadastro_usuario'] = cadastro
-    
-    # if request.method == "POST":
-    #     registro_usuario = RegisterForm(request.POST)
-    #     if registro_usuario.is_valid():
-    #         registro_usuario.save()
+
     
     return render(request, "pages/home.html", context=context)
