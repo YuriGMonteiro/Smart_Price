@@ -27,9 +27,11 @@ def user_register(request):
             user.save()
     return render(request, "pages/register.html", context=context)
 
-def list_all_products(BLING_SECRET_KEY):
-    page = 1
-    all_products = []
+def list_all_products(request):
+    if request.user.is_authenticated:
+        page = 1
+        all_products = []
+        BLING_SECRET_KEY = request.user.token   
 
     while True:
         url = f'https://bling.com.br/Api/v2/produtos/page={page}/json/'
@@ -52,24 +54,18 @@ def home(request):
     
     dados_produtos = []
     
-    produtos = list_all_products(BLING_SECRET_KEY)
+    produtos = list_all_products(request)
     
-    for item in produtos[:10]:
-        produto = item.get('produto', {})
-        codigo = produto.get('codigo', '')
-        descricao = produto.get('descricao', '')
-        situacao = produto.get('situacao', '')
-        preco = float(produto.get('preco', '0.0'))
-        precoCusto = float(produto.get('precoCusto', '0.0')) if produto.get('precoCusto') else None
-        estoqueAtual = int(produto.get('estoqueAtual', '0'))
-
+    for produto in produtos[:10]:  # Limitando para os 10 primeiros produtos
+        produto_info = produto.get('produto', {})
         dados_produtos.append({
-            'Codigo': codigo,
-            'Descricao': descricao,
-            'Situacao': situacao,
-            'Preco': preco,
-            'PrecoCusto': precoCusto,
-            'EstoqueAtual': estoqueAtual
+            'id': produto_info.get('id', ''),
+            'Codigo': produto_info.get('codigo', ''),
+            'Descricao': produto_info.get('descricao', ''),
+            'Situacao': produto_info.get('situacao', ''),
+            'Preco': float(produto_info.get('preco', '0.0')),
+            'PrecoCusto': float(produto_info.get('precoCusto', '0.0')) if produto_info.get('precoCusto') else None,
+            'EstoqueAtual': int(produto_info.get('estoqueAtual', '0'))
         })
 
     context = {}
